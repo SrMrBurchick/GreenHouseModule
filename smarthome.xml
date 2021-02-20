@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+        <remote  name="github"  fetch="https://github.com/" />
+        <project path="prebuild/" remote="github" name="SrMrBurchick/CubeMxMakefileToCmake.git" revision="master" clone-depth="1" />
+        <project path="lib/logger/" remote="github" name="SrMrBurchick/SmartHomeLogger.git" revision="master" clone-depth="1" />
+</manifest>
