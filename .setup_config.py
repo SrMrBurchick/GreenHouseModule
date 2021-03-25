@@ -6,14 +6,25 @@ import glob
 config_file = "BuildConfig.mk"
 
 CFG_PARAM_BOARD_FIELD = "BOARD"
+CFG_PARAM_TARGET_FIELD = "MK_TARGET"
 
 config_params = {
-    CFG_PARAM_BOARD_FIELD : None
+    CFG_PARAM_BOARD_FIELD : None,
+    CFG_PARAM_TARGET_FIELD : None
 }
 
 #====================================================
 
-boards = ["stm32f103"]
+stm32_boards = ["stm32f103"]
+
+boards = stm32_boards
+
+build_configs = [
+    {
+        CFG_PARAM_TARGET_FIELD : "STM32",
+        CFG_PARAM_BOARD_FIELD : stm32_boards
+    }
+]
 
 def board_select():
     print("Please select the board:")
@@ -25,6 +36,11 @@ def board_select():
 
     if board < len(boards):
         config_params[CFG_PARAM_BOARD_FIELD] = boards[board]
+        for config in build_configs:
+            if boards[board] in config[CFG_PARAM_BOARD_FIELD]:
+                config_params[CFG_PARAM_TARGET_FIELD] =\
+                        config[CFG_PARAM_TARGET_FIELD]
+                break
 
         print(config_params)
 
