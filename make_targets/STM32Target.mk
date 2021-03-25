@@ -2,17 +2,14 @@
 # Build for STM32 boards
 #####################################################
 
-include $(BOARD_MK)
+COMMON_DIR = $(shell pwd | sed "s/\(hw_modules\).*/\1/")/common
 
-ifdef BOARD
+GREEN_HOUSE_DIR = $(shell pwd | sed "s/\(green_house\).*/\1/")
 
-all: green_house
+GREEN_HOUSE_APP_DIR = $(GREEN_HOUSE_DIR)/app
 
-COMMON_DIR = $(shell sed "s/\(hw_modules\).*/\1/" <<< $PWD)/common
-
-GREEN_HOUSE_DIR = $(shell sed "s/\(green_house\).*/\1/" <<< $PWD)
-STM32GenDir = $(GREEN_HOUSE_DIR)/boards/$(BOARD)
-STM32Makefile = $(STM32GenDir)/Makefile
+STM32GenDir = $(GREEN_HOUSE_DIR)/boards/$(BOARD)/
+STM32Makefile = $(STM32GenDir)Makefile
 
 include $(STM32Makefile)
 
@@ -43,16 +40,17 @@ LDSCRIPT := $(addprefix $(STM32GenDir), $(LDSCRIPT))
 C_SOURCES +=  \
 $(COMMON_DIR)/logger/src/logger.c
 
-C_INCLUDES += \
-$(COMMON_DIR)/inc \
-$(COMMON_DIR)/logger/inc
+C_INCLUDES +=                                                                   \
+$(COMMON_DIR)/inc                                                               \
+$(COMMON_DIR)/logger/inc                                                        \
+$(GREEN_HOUSE_APP_DIR)/inc
 
 # CXX sources
 CXX_SOURCES = \
-$(GREEN_HOUSE_DIR)/app/src/green_house.cpp
+$(GREEN_HOUSE_APP_DIR)/src/green_house.cpp
 
 CXX_INCLUDES = \
-$(GREEN_HOUSE_DIR)/app/inc
+$(GREEN_HOUSE_APP_DIR)/inc
 
 #######################################
 # FLAGS
@@ -116,4 +114,3 @@ clean:
 -include $(wildcard $(BUILD_DIR)/*.d)
 
 # *** EOF ***
-endif
