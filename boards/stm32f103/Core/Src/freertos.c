@@ -140,7 +140,6 @@ void heartBeatTask(void const * argument)
 {
   /* USER CODE BEGIN heartBeatTask */
   /* Infinite loop */
-    start_app();
   for(;;)
   {
   }

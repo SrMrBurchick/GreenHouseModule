@@ -25,7 +25,7 @@ CXX=$(PREFIX)g++
 STM32_C_INCLUDES = $(C_INCLUDES:-I%=%)
 STM32_AS_INCLUDES = $(AS_INCLUDES:-I%:=%)
 
-C_SOURCES := $(addprefix $(STM32GenDir), $(C_SOURCES)) $(SOURCES)
+C_SOURCES := $(addprefix $(STM32GenDir), $(C_SOURCES))
 ASM_SOURCES := $(addprefix $(STM32GenDir), $(ASM_SOURCES))
 
 C_INCLUDES := $(addprefix -I$(STM32GenDir), $(STM32_C_INCLUDES))
@@ -37,20 +37,19 @@ LDSCRIPT := $(addprefix $(STM32GenDir), $(LDSCRIPT))
 # Update source
 ######################################
 # C sources
-C_SOURCES +=  \
+C_SOURCES +=                                                                    \
 $(COMMON_DIR)/logger/src/logger.c
 
 C_INCLUDES +=                                                                   \
-$(COMMON_DIR)/inc                                                               \
-$(COMMON_DIR)/logger/inc                                                        \
-$(GREEN_HOUSE_APP_DIR)/inc
+-I$(COMMON_DIR)/inc                                                             \
+-I$(COMMON_DIR)/logger/inc                                                      \
+-I$(GREEN_HOUSE_APP_DIR)/inc
 
 # CXX sources
 CXX_SOURCES = \
 $(GREEN_HOUSE_APP_DIR)/src/green_house.cpp
 
-CXX_INCLUDES = \
-$(GREEN_HOUSE_APP_DIR)/inc
+CXX_INCLUDES =
 
 #######################################
 # FLAGS
@@ -58,8 +57,8 @@ $(GREEN_HOUSE_APP_DIR)/inc
 
 # CXX flags
 CXX_FLAGS = $(CFLAGS) $(CXX_INCLUDES)
-CXXFLAGS+=-fno-rtti -fno-exceptions
-CXXFLAGS+=-std=c++17
+CXXFLAGS += -fno-rtti -fno-exceptions
+CXXFLAGS += -std=c++17
 
 #######################################
 # build the application

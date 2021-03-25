@@ -2,16 +2,7 @@
 # Set config
 #####################################################
 
-.PHONY : clean all green_house
-
-BUILD_CONFIG=
-
-all:
-	@echo ALL
-	@python .setup_config.py
-	${MAKE} BUILD_CONFIG=BuildConfig.mk
-clean:
-	rm -rf build
+BUILD_CONFIG=BuildConfig.mk
 
 include $(BUILD_CONFIG)
 
@@ -25,6 +16,7 @@ MAKE_TARGETS_DIR = $(GREEN_HOUSE_DIR)/make_targets
 TARGET_Makefile = $(MAKE_TARGETS_DIR)/$(MK_TARGET)Target.mk
 
 all: green_house
+.PHONY : green_house
 
 include $(TARGET_Makefile)
 

@@ -11,8 +11,16 @@
 
 #include "common.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 result_t startLoggerTask();
 result_t startHeatBeatTask();
 result_t startModuleTask();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  //__GREEN_HOUSE_API__
