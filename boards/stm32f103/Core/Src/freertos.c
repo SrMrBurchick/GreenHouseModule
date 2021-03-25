@@ -26,8 +26,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "green_house.h"
-#include "logger_api.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -145,8 +143,6 @@ void heartBeatTask(void const * argument)
     start_app();
   for(;;)
   {
-      HAL_GPIO_TogglePin(HEARTBEAT_LED_GPIO_Port, HEARTBEAT_LED_Pin);
-    osDelay(500);
   }
   /* USER CODE END heartBeatTask */
 }
