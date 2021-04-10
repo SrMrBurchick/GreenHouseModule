@@ -26,7 +26,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "logger_api.h"
+#include "stm32f103_logger.h"
+#include "green_house_api.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,12 +55,22 @@
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
-
+static board_st_t st_board;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static void boardInit() {
+        st_board.logger_ops.init = logger_init;
+        st_board.logger_ops.send_msg = logger_send_msg;
+        st_board.logger_ops.start = logger_start;
+        st_board.logger_ops.get_sys_time = HAL_GetTick;
 
+        st_board.board_ops.delay = HAL_Delay;
+        st_board.board_ops.init_led = NULL;
+
+        initModule(&st_board);
+}
 /* USER CODE END 0 */
 
 /**
@@ -92,7 +104,7 @@ int main(void)
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  boardInit();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

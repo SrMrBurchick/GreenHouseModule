@@ -69,7 +69,9 @@ Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/port.c \
 Core/Src/gpio.c \
 Core/Src/spi.c \
-Core/Src/usart.c
+Core/Src/usart.c \
+lib/src/stm32f103_logger.c \
+lib/src/uart_console.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -134,7 +136,8 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3 \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
--IDrivers/CMSIS/Include
+-IDrivers/CMSIS/Include \
+-Ilib/inc
 
 
 # compile gcc flags

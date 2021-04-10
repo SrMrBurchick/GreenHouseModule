@@ -26,6 +26,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "green_house_api.h"
+#include "uart_console.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,7 +53,7 @@ osThreadId heartBeatHandle;
 uint32_t heartBeatBuffer[ 128 ];
 osStaticThreadDef_t heartBeatControlBlock;
 osThreadId consoleHandle;
-uint32_t consoleBuffer[ 128 ];
+uint32_t consoleBuffer[ 256 ];
 osStaticThreadDef_t consoleControlBlock;
 osThreadId sensorMonitorHandle;
 uint32_t sensorMonitorBuffer[ 128 ];
@@ -116,7 +118,7 @@ void MX_FREERTOS_Init(void) {
   heartBeatHandle = osThreadCreate(osThread(heartBeat), NULL);
 
   /* definition and creation of console */
-  osThreadStaticDef(console, consoleTask, osPriorityIdle, 0, 128, consoleBuffer, &consoleControlBlock);
+  osThreadStaticDef(console, consoleTask, osPriorityIdle, 0, 256, consoleBuffer, &consoleControlBlock);
   consoleHandle = osThreadCreate(osThread(console), NULL);
 
   /* definition and creation of sensorMonitor */
@@ -157,6 +159,7 @@ void consoleTask(void const * argument)
 {
   /* USER CODE BEGIN consoleTask */
   /* Infinite loop */
+  startLoggerTask();
   for(;;)
   {
     osDelay(1);
