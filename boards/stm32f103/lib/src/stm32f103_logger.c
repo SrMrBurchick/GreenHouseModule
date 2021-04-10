@@ -1,8 +1,7 @@
-#include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include "logger.h"
+#include "stm32f103_logger.h"
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "semphr.h"
@@ -29,7 +28,8 @@ result_t logger_init() {
         return eResultFailed;
     }
 
-    st_loggerQueue_p = xQueueCreateStatic(QUEUE_LENGTH, ITEM_SIZE, st_loggerQueueBuffer, &xStaticQueue);
+    st_loggerQueue_p = xQueueCreateStatic(QUEUE_LENGTH, ITEM_SIZE,
+                                          st_loggerQueueBuffer, &xStaticQueue);
 
     if (NULL == st_loggerQueue_p) {
         return eResultFailed;
@@ -38,31 +38,42 @@ result_t logger_init() {
 }
 
 void logger_send_msg(const char* fmt, uint16_t length) {
-    uint8_t* msg_p = pvPortMalloc(length);
-
+    uint8_t* msg_p = (uint8_t *)pvPortMalloc(length);
     if(NULL == msg_p) {
         return;
     }
-    
+
     memcpy(msg_p, fmt, length);
 
-    if (pdPASS != xQueueSend(st_loggerQueue_p, (void*)&msg_p, LOGGER_QUEUE_TIMEOUT)) {
+    if (pdPASS != xQueueSend(st_loggerQueue_p, (void*)&msg_p,
+                             LOGGER_QUEUE_TIMEOUT)) {
         vPortFree(msg_p);
         return;
     }
 }
 
-void logger_start() {
+void logger_start(const char* fmt, va_list args) {
     uint8_t* msg_p = NULL;
+    static char buffer[MSG_SIZE] = "";
+    uint16_t size = 0;
+
+    size = vsnprintf(buffer, MSG_SIZE, fmt, args);
+
+    uart_write_line(buffer, size);
+    uart_write_line(NEXT_LINE, strlen(NEXT_LINE));
+
     while (1) {
         if (NULL != msg_p) {
             vPortFree(msg_p);
             msg_p = NULL;
         }
-        if (pdPASS == xQueueReceive(st_loggerQueue_p, &msg_p, LOGGER_QUEUE_TIMEOUT)) {
+
+        if (pdPASS == xQueueReceive(st_loggerQueue_p, &msg_p,
+                                    LOGGER_QUEUE_TIMEOUT)) {
             uart_write_line((char *)msg_p, strlen((char *)msg_p));
             uart_write_line(NEXT_LINE, strlen(NEXT_LINE));
         }
+
         vTaskDelay(st_loggerTaskTimeoutMs);
     }
 }
