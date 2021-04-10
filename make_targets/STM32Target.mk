@@ -49,16 +49,19 @@ C_INCLUDES +=                                                                   
 CXX_SOURCES = \
 $(GREEN_HOUSE_APP_DIR)/src/green_house.cpp
 
-CXX_INCLUDES =
+CXX_INCLUDES =									\
+-I$(GREEN_HOUSE_APP_DIR)/inc							\
+$(C_INCLUDES)
 
 #######################################
 # FLAGS
 #######################################
 
-# CXX flags
-CXX_FLAGS = $(CFLAGS) $(CXX_INCLUDES)
-CXXFLAGS += -fno-rtti -fno-exceptions
-CXXFLAGS += -std=c++17
+# Flags for g++
+CXX_FLAGS=$(CFLAGS)
+CXX_FLAGS+=-fno-rtti -fno-exceptions
+CXX_FLAGS+=-std=c++11
+CXX_FLAGS+=$(CXX_INCLUDES)
 
 #######################################
 # build the application
@@ -80,10 +83,10 @@ OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
 $(BUILD_DIR)/%.o: %.c $(STM32Makefile) | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	$(CC) -MMD $(CFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%.o: %.cpp $(STM32Makefile) | $(BUILD_DIR) 
-	$(CXX) -c $(CXX_FLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
+	$(CXX) -MMD $(CXX_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%.o: %.s $(STM32Makefile) | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
@@ -96,17 +99,17 @@ $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(HEX) $< $@
 	
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(BIN) $< $@	
+	$(BIN) $< $@
 	
 $(BUILD_DIR):
-	mkdir $@		
+	mkdir $@
 
 #######################################
 # clean up
 #######################################
 clean:
 	-rm -fR $(BUILD_DIR)
-  
+
 #######################################
 # dependencies
 #######################################
