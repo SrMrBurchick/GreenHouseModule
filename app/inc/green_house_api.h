@@ -9,11 +9,13 @@
 #ifndef __GREEN_HOUSE_API__
 #define __GREEN_HOUSE_API__
 
-#include "common.h"
+#include "board_config.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+result_t initModule(board_st_t *);
 
 result_t startLoggerTask();
 result_t startHeatBeatTask();
