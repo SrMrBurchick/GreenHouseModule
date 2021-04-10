@@ -65,7 +65,8 @@ result_t startLoggerTask() {
 result_t startModuleTask() {
     result_t result = eResultSucces;
     ///< TODO: Add module task implementation
- 
+    logInfoMsg("Hello Green House developer!");
+
     return result;
 }
 
