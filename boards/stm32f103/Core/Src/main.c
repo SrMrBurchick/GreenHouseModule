@@ -27,8 +27,14 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "logger_api.h"
+
 #include "stm32f103_logger.h"
+#include "stm32f103_bme280.h"
+
 #include "green_house_api.h"
+
+#include "FreeRTOS.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,21 +61,45 @@
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
-static board_st_t st_board;
+static green_house_config_st_t st_greenHouseCfg;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-static void boardInit() {
-        st_board.logger_ops.init = logger_init;
-        st_board.logger_ops.send_msg = logger_send_msg;
-        st_board.logger_ops.start = logger_start;
-        st_board.logger_ops.get_sys_time = HAL_GetTick;
 
-        st_board.board_ops.delay = HAL_Delay;
-        st_board.board_ops.init_led = NULL;
+static
+void bme280Init() {
+    struct identifier *dev_id_p = NULL;
 
-        initModule(&st_board);
+    for (uint8_t i = 0; i < GREEN_HOUSE_BME280_COUNT; i++) {
+
+        stm32f103_bme280_init((bme280_sensor_id_t)i);
+
+        dev_id_p = (struct identifier *)pvPortMalloc(sizeof(struct identifier));
+
+        dev_id_p->dev_addr = i;
+        st_greenHouseCfg.bme280_devices[i].intf_ptr = dev_id_p;
+ 
+        st_greenHouseCfg.bme280_devices[i].intf = BME280_SPI_INTF;
+ 
+        st_greenHouseCfg.bme280_devices[i].read = stm32f103_bme280_spi_read;
+        st_greenHouseCfg.bme280_devices[i].write = stm32f103_bme280_spi_write;
+        st_greenHouseCfg.bme280_devices[i].delay_us = stm32f103_bme280_delay_ms;
+    }
+}
+
+static
+void boardInit() 
+{
+    st_greenHouseCfg.base_config.logger_ops.init = logger_init;
+    st_greenHouseCfg.base_config.logger_ops.send_msg = logger_send_msg;
+    st_greenHouseCfg.base_config.logger_ops.start = logger_start;
+    st_greenHouseCfg.base_config.logger_ops.get_sys_time = HAL_GetTick;
+    st_greenHouseCfg.base_config.board_ops.delay = HAL_Delay;
+
+    bme280Init();
+
+    initModule(&st_greenHouseCfg);
 }
 /* USER CODE END 0 */
 

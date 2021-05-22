@@ -1,7 +1,7 @@
 #MicroXplorer Configuration settings - do not modify
 FREERTOS.FootprintOK=true
 FREERTOS.IPParameters=Tasks01,FootprintOK
-FREERTOS.Tasks01=heartBeat,0,128,heartBeatTask,Default,NULL,Static,heartBeatBuffer,heartBeatControlBlock;console,-3,256,consoleTask,Default,NULL,Static,consoleBuffer,consoleControlBlock;sensorMonitor,-3,128,sensorMonitorTask,Default,NULL,Static,sensorMonitorBuffer,sensorMonitorControlBlock
+FREERTOS.Tasks01=heartBeat,0,128,heartBeatTask,Default,NULL,Static,heartBeatBuffer,heartBeatControlBlock;console,-3,384,consoleTask,Default,NULL,Static,consoleBuffer,consoleControlBlock;sensorMonitor,-3,256,sensorMonitorTask,Default,NULL,Static,sensorMonitorBuffer,sensorMonitorControlBlock
 File.Version=6
 GPIO.groupedBy=
 KeepUserPlacement=false

@@ -3,6 +3,7 @@
 #####################################################
 
 COMMON_DIR = $(shell pwd | sed "s/\(hw_modules\).*/\1/")/common
+BME280_DIR = $(COMMON_DIR)/external_libs/sensors/BoschBME280
 
 GREEN_HOUSE_DIR = $(shell pwd | sed "s/\(green_house\).*/\1/")
 
@@ -38,20 +39,22 @@ LDSCRIPT := $(addprefix $(STM32GenDir), $(LDSCRIPT))
 ######################################
 # C sources
 C_SOURCES +=                                                                    \
-$(COMMON_DIR)/logger/src/logger.c
+$(COMMON_DIR)/logger/src/logger.c												\
+$(BME280_DIR)/bme280.c
 
 C_INCLUDES +=                                                                   \
 -I$(COMMON_DIR)/inc                                                             \
 -I$(COMMON_DIR)/logger/inc                                                      \
+-I$(BME280_DIR)																	\
 -I$(GREEN_HOUSE_APP_DIR)/inc
 
 # CXX sources
 CXX_SOURCES = \
 $(GREEN_HOUSE_APP_DIR)/src/green_house.cpp
 
-CXX_INCLUDES =									\
--I$(GREEN_HOUSE_APP_DIR)/inc							\
-$(C_INCLUDES)
+CXX_INCLUDES =																	\
+$(C_INCLUDES)																	\
+-I$(GREEN_HOUSE_APP_DIR)/inc
 
 #######################################
 # FLAGS

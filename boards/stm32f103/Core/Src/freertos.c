@@ -53,10 +53,10 @@ osThreadId heartBeatHandle;
 uint32_t heartBeatBuffer[ 128 ];
 osStaticThreadDef_t heartBeatControlBlock;
 osThreadId consoleHandle;
-uint32_t consoleBuffer[ 256 ];
+uint32_t consoleBuffer[ 384 ];
 osStaticThreadDef_t consoleControlBlock;
 osThreadId sensorMonitorHandle;
-uint32_t sensorMonitorBuffer[ 128 ];
+uint32_t sensorMonitorBuffer[ 256 ];
 osStaticThreadDef_t sensorMonitorControlBlock;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -118,11 +118,11 @@ void MX_FREERTOS_Init(void) {
   heartBeatHandle = osThreadCreate(osThread(heartBeat), NULL);
 
   /* definition and creation of console */
-  osThreadStaticDef(console, consoleTask, osPriorityIdle, 0, 256, consoleBuffer, &consoleControlBlock);
+  osThreadStaticDef(console, consoleTask, osPriorityIdle, 0, 384, consoleBuffer, &consoleControlBlock);
   consoleHandle = osThreadCreate(osThread(console), NULL);
 
   /* definition and creation of sensorMonitor */
-  osThreadStaticDef(sensorMonitor, sensorMonitorTask, osPriorityIdle, 0, 128, sensorMonitorBuffer, &sensorMonitorControlBlock);
+  osThreadStaticDef(sensorMonitor, sensorMonitorTask, osPriorityIdle, 0, 256, sensorMonitorBuffer, &sensorMonitorControlBlock);
   sensorMonitorHandle = osThreadCreate(osThread(sensorMonitor), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -144,6 +144,8 @@ void heartBeatTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+          HAL_GPIO_TogglePin(HEARTBEAT_LED_GPIO_Port, HEARTBEAT_LED_Pin);
+          osDelay(300);
   }
   /* USER CODE END heartBeatTask */
 }
@@ -180,7 +182,8 @@ void sensorMonitorTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(1000);
+    startModuleTask();
   }
   /* USER CODE END sensorMonitorTask */
 }

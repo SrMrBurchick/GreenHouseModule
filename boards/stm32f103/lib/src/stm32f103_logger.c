@@ -64,6 +64,7 @@ void logger_start(const char* fmt, va_list args) {
 
     while (1) {
         if (NULL != msg_p) {
+            memset(msg_p, 0, strlen((char *)msg_p) + 1);
             vPortFree(msg_p);
             msg_p = NULL;
         }
